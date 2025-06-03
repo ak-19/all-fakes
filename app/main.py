@@ -23,6 +23,12 @@ async def index(request: Request):
     return templates.TemplateResponse(request, "index.html")
 
 
+@app.get("/watch", response_class=HTMLResponse)
+async def watch(request: Request):
+    """Render the swipeable video feed page."""
+    return templates.TemplateResponse(request, "watch.html")
+
+
 @app.post("/users")
 async def create_user(user: UserCreate):
     user_id = str(uuid4())
