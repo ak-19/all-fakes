@@ -4,6 +4,11 @@ from app.main import app
 
 client = TestClient(app)
 
+def test_index_page():
+    resp = client.get("/")
+    assert resp.status_code == 200
+    assert "text/html" in resp.headers["content-type"]
+
 def test_create_user():
     resp = client.post("/users", json={"username": "alice"})
     assert resp.status_code == 200
