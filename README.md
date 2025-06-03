@@ -13,6 +13,9 @@ This project is a simple demonstration of how you might implement a TikTok-like 
    uvicorn app.main:app --reload
    ```
 
+Then open `http://localhost:8000/` in your browser to use a minimal web
+interface for creating users, uploading videos and browsing the feed.
+
 ## API Endpoints
 
 - `POST /users` – Create a new user. Body: `{"username": "example"}`

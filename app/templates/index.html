@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini TikTok Clone</title>
+</head>
+<body>
+    <h1>Mini TikTok Clone</h1>
+    <h2>Create User</h2>
+    <form id="user-form">
+        <input type="text" name="username" placeholder="Username" required>
+        <button type="submit">Create</button>
+    </form>
+    <h2>Upload Video</h2>
+    <form id="video-form" enctype="multipart/form-data">
+        <input type="text" name="user_id" placeholder="User ID" required><br>
+        <input type="text" name="description" placeholder="Description"><br>
+        <input type="file" name="file" accept="video/*" required><br>
+        <button type="submit">Upload</button>
+    </form>
+    <h2>Feed</h2>
+    <button id="refresh-feed">Refresh Feed</button>
+    <ul id="feed"></ul>
+<script>
+async function createUser(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const resp = await fetch('/users', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username: formData.get('username')})
+    });
+    const data = await resp.json();
+    alert('Created user with id: ' + data.id);
+}
+async function uploadVideo(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const resp = await fetch('/videos', {
+        method: 'POST',
+        body: formData
+    });
+    const data = await resp.json();
+    alert('Uploaded video with id: ' + data.id);
+}
+async function refreshFeed() {
+    const resp = await fetch('/feed');
+    const data = await resp.json();
+    const feedEl = document.getElementById('feed');
+    feedEl.innerHTML = '';
+    for (const vid of data) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = '/videos/' + vid.id;
+        a.innerText = vid.description || vid.id;
+        li.appendChild(a);
+        feedEl.appendChild(li);
+    }
+}
+document.getElementById('user-form').addEventListener('submit', createUser);
+document.getElementById('video-form').addEventListener('submit', uploadVideo);
+document.getElementById('refresh-feed').addEventListener('click', refreshFeed);
+</script>
+</body>
+</html>

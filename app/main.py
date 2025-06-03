@@ -1,10 +1,12 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from uuid import uuid4
 import os
 
 app = FastAPI(title="Mini TikTok Clone")
+templates = Jinja2Templates(directory="app/templates")
 
 # Data storage
 USERS = {}
@@ -14,6 +16,11 @@ os.makedirs(VIDEO_DIR, exist_ok=True)
 
 class UserCreate(BaseModel):
     username: str
+
+
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse(request, "index.html")
 
 
 @app.post("/users")
